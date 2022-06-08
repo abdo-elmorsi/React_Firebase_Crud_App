@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Form, Alert, InputGroup, Button, ButtonGroup } from "react-bootstrap";
 import BookDataService from "../services/book.services";
 
@@ -40,7 +40,7 @@ const AddBook = ({ id, setBookId }) => {
     setAuthor("");
   };
 
-  const editHandler = async () => {
+  const editHandler = useCallback(async () => {
     setMessage("");
     try {
       const docSnap = await BookDataService.getBook(id);
@@ -51,14 +51,15 @@ const AddBook = ({ id, setBookId }) => {
     } catch (err) {
       setMessage({ error: true, msg: err.message });
     }
-  };
+
+  }, [id]);
 
   useEffect(() => {
     console.log("The id here is : ", id);
     if (id !== undefined && id !== "") {
       editHandler();
     }
-  }, [id]);
+  }, [id, editHandler]);
   return (
     <>
       <div className="p-4 box">
